@@ -1,6 +1,5 @@
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Flex, Input, Typography } from "antd";
-import { formatCurrency } from "../../utils/utils";
+import { Button, Flex, InputNumber, Typography } from "antd";
 import { FC, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { updateQuantity } from "../../slices/cardsSlice";
@@ -13,18 +12,20 @@ type CounterWithCostProps = {
 };
 
 const CounterWithCost: FC<CounterWithCostProps> = ({ price, id }) => {
-    const [quantity, setQuantity] = useState(1);
-    const decrement = () => setQuantity(quantity - 1);
-    const increment = () => setQuantity(quantity + 1);
-    const onChange = (evt: React.ChangeEvent<HTMLInputElement>) =>
-        evt.target.value;
     const dispatch = useAppDispatch();
-    const { cards } = useAppSelector((state) => state);
-    console.log(cards);
+
+    const [quantity, setQuantity] = useState(0);
+    const decrement = () => setQuantity(quantity - 1);
+    const increment = () => {
+        setQuantity(quantity + 1);
+        dispatch(updateQuantity({id, quantity: quantity + 1}))
+    };
+    const { MAX_QUANTITY_ONE_GOOD } = useAppSelector((state) => state.cards);
+    const onChange = (value: any) => setQuantity(value);
     return (
         <Flex gap="middle" align="center">
             <Flex gap="small" align="center">
-                {quantity > 1 && (
+                {quantity > 0 && (
                     <Button
                         size="small"
                         type="default"
@@ -36,12 +37,15 @@ const CounterWithCost: FC<CounterWithCostProps> = ({ price, id }) => {
                         }}
                     />
                 )}
-                <Input
+                <InputNumber
                     placeholder="Enter quantity"
                     value={quantity}
                     onChange={onChange}
+                    controls={false}
+                    min={0}
+                    max={10}
                 />
-                {quantity < 10 && (
+                {quantity < MAX_QUANTITY_ONE_GOOD && (
                     <Button
                         size="small"
                         type="default"
@@ -51,7 +55,9 @@ const CounterWithCost: FC<CounterWithCostProps> = ({ price, id }) => {
                     />
                 )}
             </Flex>
-            <Text>Price for item: {price}</Text>
+            <Text strong italic>
+                Price for item: {price} €
+            </Text>
         </Flex>
     );
 };

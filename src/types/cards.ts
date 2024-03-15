@@ -16,4 +16,5 @@ export type Card = {
 
 export type CardsInitialState = {
     cards: Card[];
+    MAX_QUANTITY_ONE_GOOD: number;
 };

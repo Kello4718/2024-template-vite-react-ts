@@ -4,6 +4,6 @@ export const formatCurrency = (value: number | string) => {
     }
     return new Intl.NumberFormat("ru", {
         style: "currency",
-        currency: "RUB",
+        currency: "EUR",
     }).format(Number(value));
 };

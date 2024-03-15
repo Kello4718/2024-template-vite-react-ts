@@ -1,15 +1,14 @@
 import { List } from "antd";
-import CounterWithCost from "../ui/CounterWithCost";
 import { useGetCardsQuery } from "../../services/cards";
-import styled from "styled-components";
 import { useAppDispatch } from "../../app/hooks";
 import { useEffect } from "react";
+import CardsItem from "./CardsItem";
 import { updateCards } from "../../slices/cardsSlice";
+import styled from "styled-components";
 
-const ImageStyled = styled.img`
-    width: 150px;
-    height: auto;
-    object-fit: cover;
+const StyledList = styled(List)`
+    height: 100vh;
+    overflow-y: scroll;
 `;
 
 const Cards = () => {
@@ -20,28 +19,10 @@ const Cards = () => {
     }, [dispatch, data]);
     return (
         <div>
-            <List
+            <StyledList
                 itemLayout="vertical"
                 dataSource={data ?? []}
-                renderItem={(item) => (
-                    <List.Item
-                        key={item.id}
-                        actions={[
-                            <CounterWithCost id={item.id} price={item.price} />,
-                        ]}
-                    >
-                        <ImageStyled
-                            width={150}
-                            height={200}
-                            alt={item.title}
-                            src={item.image}
-                        />
-                        <List.Item.Meta
-                            title={item.title}
-                            description={item.description}
-                        />
-                    </List.Item>
-                )}
+                renderItem={(item) => <CardsItem item={item} />}
             />
         </div>
     );
